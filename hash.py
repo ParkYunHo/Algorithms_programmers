@@ -103,45 +103,100 @@ def spy_combine2(clothes):
     return res
 
 
+# class Album:
+#     def __init__(self, play, idx):
+#         self.chain = dict()
+#         self.chain[play] = idx
+#         self._sum = play
+#
+#     def __insert__(self, play, idx):
+#         self._sum += play
+#         self.chain[play] = idx if play not in self.chain else self.chain[play]
+#
+#     def __sum__(self):
+#         return self._sum
+#
+#     def __max__(self):
+#         res = list()
+#         tmp = self.chain
+#         res.append(tmp.pop(max(tmp)))
+#         res.append(tmp.pop(max(tmp))) if len(tmp) > 0 else None
+#         return res
+#
+#
+# def best_album():
+#     # genres = ["classic", "pop", "classic", "classic", "pop"]
+#     # plays = [500, 600, 1500, 800, 2500]
+#     genres = ["classic", "pop", "classic", "classic", "pop", "rock"]
+#     plays = [500, 1800, 150, 800, 1800, 2500]
+#     # genres = ["pop", "rock", "rock", "rock", "rock", "pop"]
+#     # plays = [100, 600, 800, 800, 2500, 100]
+#
+#     # 1. 장르별 play수가 가장 많은 장르부터 수록
+#     # 2. play수가 가장 많은 장르 내에 가장 많이 재생된 노래 먼저 수록
+#     # 3. 장르내 재생 횟수가 같은 노래중 고유번호가 낮은 노래부터 수록
+#     # 4. 한 장르에 값이 한개만 있는 경우, 두 장르의 total이 같을 경우, 장르 자체가 한개만 있을 경우
+#
+#     # 문제점 : 같은 genre 내에서 plays 수가 같은 경우 idx가 먼저인 노래를 먼저 수록해야 되는데 play수가 같은 노래는 chain에 저장 안해서 에러발생
+#
+#     unique = dict()
+#     unique_list = list()
+#     for idx, val in enumerate(genres):
+#         if val in unique:
+#             unique[val].__insert__(plays[idx], idx)
+#         else:
+#             unique[val] = Album(plays[idx], idx)
+#             unique_list.append(val)
+#
+#     tmp = dict()
+#     for i in unique_list:
+#         tmp[unique[i].__sum__()] = i
+#
+#     print(tmp)
+#
+#     res = unique[tmp[max(tmp)]].__max__()
+#     del tmp[max(tmp)]
+#     print(tmp)
+#     if len(tmp) > 0:
+#         res += unique[tmp[max(tmp)]].__max__()
+#     print(res)
+#     return res
+
 class Album:
     def __init__(self, play, idx):
         self.chain = dict()
-        self.chain[play] = idx
+        self.chain[idx] = play
+        self._sum = play
 
     def __insert__(self, play, idx):
-        self.chain[play] = idx if play not in self.chain else None
+        self._sum += play
+        self.chain[idx] = play
 
     def __sum__(self):
-        return sum(i for i in self.chain)
+        return self._sum
 
     def __max__(self):
         res = list()
-        _max = 0
-        _sec = 0
-        for i in self.chain:
-            if _max < i:
-                _sec = _max
-                _max = i
-            elif _sec < i:
-                _sec = i
-        res.append(self.chain[_max])
-        if _sec > 0:
-            res.append(self.chain[_sec])
+        tmp = self.chain
+        res.append(tmp.pop(max(tmp)))
+        res.append(tmp.pop(max(tmp))) if len(tmp) > 0 else None
         return res
 
 
 def best_album():
     # genres = ["classic", "pop", "classic", "classic", "pop"]
-    # plays = [500, 600, 150, 800, 2500]
-    # genres = ["classic", "pop", "classic", "classic", "pop", "rock"]
-    # plays = [500, 600, 150, 800, 2500, 1800]
-    genres = ["rock", "rock", "rock", "rock", "rock", "rock"]
-    plays = [500, 600, 150, 800, 2500, 180]
+    # plays = [500, 600, 1500, 800, 2500]
+    genres = ["classic", "pop", "classic", "classic", "pop", "rock"]
+    plays = [500, 1800, 150, 800, 1800, 2500]
+    # genres = ["pop", "rock", "rock", "rock", "rock", "pop"]
+    # plays = [100, 600, 800, 800, 2500, 100]
 
     # 1. 장르별 play수가 가장 많은 장르부터 수록
     # 2. play수가 가장 많은 장르 내에 가장 많이 재생된 노래 먼저 수록
     # 3. 장르내 재생 횟수가 같은 노래중 고유번호가 낮은 노래부터 수록
     # 4. 한 장르에 값이 한개만 있는 경우, 두 장르의 total이 같을 경우, 장르 자체가 한개만 있을 경우
+
+    # 문제점 : 같은 genre 내에서 plays 수가 같은 경우 idx가 먼저인 노래를 먼저 수록해야 되는데 play수가 같은 노래는 chain에 저장 안해서 에러발생
 
     unique = dict()
     unique_list = list()
@@ -152,40 +207,40 @@ def best_album():
             unique[val] = Album(plays[idx], idx)
             unique_list.append(val)
 
-    max = 0
-    max_idx = ""
-    sec = 0
-    sec_idx = ""
-
+    tmp = dict()
     for i in unique_list:
-        if max < unique[i].__sum__():
-            sec = max
-            sec_idx = max_idx
-            max = unique[i].__sum__()
-            max_idx = i
-        elif sec < unique[i].__sum__():
-            sec = unique[i].__sum__()
-            sec_idx = i
+        tmp[unique[i].__sum__()] = i
 
-    res = unique[max_idx].__max__()
-    if sec > 0:
-        res += unique[sec_idx].__max__()
+    print(tmp)
 
+    res = unique[tmp[max(tmp)]].__max__()
+    del tmp[max(tmp)]
+    print(tmp)
+    if len(tmp) > 0:
+        res += unique[tmp[max(tmp)]].__max__()
     print(res)
+    # return res
 
+    tt = dict()
+    tt[0] = 10
+    tt[1] = 20
+    tt[2] = 20
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    # print(max(tt.values()))
+    _max = list()
+    a = max(tt.values())
+    for idx, val in tt.items():
+        if val == a:
+            _max.append(idx)
+    print(min(_max))
+    #     if val == a:
+    #         _max.append(idx)
+    #
+    # print(_max)
+    # _max = list()
+    #
+    # for idx, val in tt:
+    #     if val == max(tt.values()):
+    #         _max.append(idx)
+    #
+    # print(_max)
