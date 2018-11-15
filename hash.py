@@ -176,20 +176,31 @@ class Album:
         return self._sum
 
     def __max__(self):
+        s_chain = sorted(list(self.chain.values()), reverse=True)
         res = list()
-        tmp = self.chain
-        res.append(tmp.pop(max(tmp)))
-        res.append(tmp.pop(max(tmp))) if len(tmp) > 0 else None
+        for i in s_chain[:2]:
+            for idx, val in self.chain.items():
+                if val == i:
+                    res.append(idx)
+                    if len(res) > 1:
+                        break
+            if len(res) > 1:
+                break
         return res
 
 
 def best_album():
     # genres = ["classic", "pop", "classic", "classic", "pop"]
     # plays = [500, 600, 1500, 800, 2500]
-    genres = ["classic", "pop", "classic", "classic", "pop", "rock"]
-    plays = [500, 1800, 150, 800, 1800, 2500]
-    # genres = ["pop", "rock", "rock", "rock", "rock", "pop"]
-    # plays = [100, 600, 800, 800, 2500, 100]
+    # genres = ["classic", "pop", "classic", "classic", "pop", "rock"]
+    # plays = [500, 1800, 150, 800, 1800, 2500]
+    # genres = ["pop", "rock", "rock", "rock", "rock", "pop", "pop", "classic", "classic"]
+    # plays = [2500, 600, 800, 800, 2500, 200, 200, 1000, 1001]
+    # genres = ["a", "a", "a", "b", "b", "b", "c", "c", "c"]
+    # plays = [100, 100, 100, 200, 200, 200, 300, 300, 300]
+    genres = ["a", "a", "a", "b", "b", "b", "c", "c"]
+    plays = [100, 100, 101, 200, 200, 200, 300, 301]
+    test =  [ 0,    1,  2,   3,   4,   5,   6,   7,   8]
 
     # 1. 장르별 play수가 가장 많은 장르부터 수록
     # 2. play수가 가장 많은 장르 내에 가장 많이 재생된 노래 먼저 수록
@@ -206,41 +217,39 @@ def best_album():
         else:
             unique[val] = Album(plays[idx], idx)
             unique_list.append(val)
-
     tmp = dict()
     for i in unique_list:
         tmp[unique[i].__sum__()] = i
 
-    print(tmp)
-
     res = unique[tmp[max(tmp)]].__max__()
     del tmp[max(tmp)]
-    print(tmp)
     if len(tmp) > 0:
         res += unique[tmp[max(tmp)]].__max__()
     print(res)
     # return res
 
-    tt = dict()
-    tt[0] = 10
-    tt[1] = 20
-    tt[2] = 20
 
-    # print(max(tt.values()))
-    _max = list()
-    a = max(tt.values())
-    for idx, val in tt.items():
-        if val == a:
-            _max.append(idx)
-    print(min(_max))
-    #     if val == a:
-    #         _max.append(idx)
+    # chain = dict()
+    # chain[0] = 10
+    # chain[1] = 20
+    # chain[2] = 30
+    # chain[3] = 40
     #
-    # print(_max)
-    # _max = list()
+    # s_chain = sorted(list(chain.values()), reverse=True)
+    # res = list()
+    # for i in s_chain[:2]:
+    #     for idx, val in chain.items():
+    #         if val == i:
+    #             res.append(idx)
+    #             if len(res) > 1:
+    #                 break
+    #     if len(res) > 1:
+    #         break
     #
-    # for idx, val in tt:
-    #     if val == max(tt.values()):
-    #         _max.append(idx)
+    # # for i in s_chain[:2]:
+    # #     for idx, val in chain.items():
+    # #         if val == i and len(res) < 2:
+    # #             res.append(idx)
     #
-    # print(_max)
+    #
+    # print(res)
